@@ -1,0 +1,62 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.18;
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import "hardhat/console.sol";
+
+contract DegenToken is ERC20, Ownable, ERC20Burnable {
+
+    constructor() ERC20("Degen Token", "DGN ") {}
+
+        function mint_Tokens(address to, uint256 amount) public onlyOwner{
+            _mint(to, amount);//mint the tokens
+        }
+        function transfer_Tokens(address _reciever, uint amount) external{
+            require(balanceOf(msg.sender) >= amount, "You are not a valid user");
+            approve(msg.sender, amount);
+            transferFrom(msg.sender, _reciever, amount);//transfer the tokens
+        }
+        function getBalance() external view returns(uint){
+           return balanceOf(msg.sender);// know thw balance of the account
+        }
+        function burn_Tokens(uint amount) external{
+            require(balanceOf(msg.sender)>= amount, "There are not enough of the Degen Tokens");
+            _burn(msg.sender, amount);// burn the tokens
+        }
+        function redeem_Rewards() public pure returns(string memory) {//redeem the rewards from the earned tokens
+            return "1. Diamond Royale Voucher = 500 \n 2. Legendary Skin = 250 /n 3.Resource Portion  = 100 /n 4.Fight Loot Box = 75 /n 5. Classic Crate Coupon=50";
+        }
+        function reedemTokens(uint choice) external payable{
+            require(choice<=5,"");
+            if(choice==1){
+                require(balanceOf(msg.sender)>=500, "You don't have sufficient amount of tokens to redeem this reward");
+                approve(msg.sender, 500);
+                transferFrom(msg.sender, owner(), 500);
+            }
+            else if(choice ==2){
+                require(balanceOf(msg.sender)>=250, "You don't have sufficient amount of tokens to redeem this reward");
+                approve(msg.sender, 250);
+                transferFrom(msg.sender, owner(), 250);
+            }
+             else if(choice ==3){
+                require(balanceOf(msg.sender)>=100, "You don't have sufficient amount of tokens to redeem this reward");
+                approve(msg.sender, 100);
+                transferFrom(msg.sender, owner(), 100);
+            }
+             else if(choice ==4){
+                require(balanceOf(msg.sender)>=75, "You don't have sufficient amount of tokens to redeem this reward");
+                approve(msg.sender, 75);
+                transferFrom(msg.sender, owner(), 75);
+            }
+            else{
+                require(balanceOf(msg.sender)>=50, "You don't have sufficient amount of tokens to redeem this reward");
+                approve(msg.sender, 50);
+                transferFrom(msg.sender, owner(), 50);
+            }
+
+
+        }
+
+}
